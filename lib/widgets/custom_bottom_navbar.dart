@@ -20,7 +20,7 @@ class CustomBottomNavbar extends StatelessWidget {
       onTap: onItemTapped,
 
       selectedLabelStyle: const TextStyle(
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
       unselectedLabelStyle: const TextStyle(
@@ -42,21 +42,24 @@ class CustomBottomNavbar extends StatelessWidget {
     final bool isSelected = selectedIndex == index;
 
     return BottomNavigationBarItem(
+      
       icon: Container(
+        margin: EdgeInsets.all(9),
+        // padding: const EdgeInsets.all(4.0),
         decoration: isSelected
             ? BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9),
-                    blurRadius: 90,
-                    offset: const Offset(0, 5),
+                    color: const Color.fromARGB(255, 29, 69, 125).withOpacity(0.4),
+                    blurRadius: 30,
+                    offset: const Offset(0, 3),
                   )
                 ],
               )
             : null,
         child: Icon(
           icon,
-          size: isSelected ? 40 : 25,
+          size: isSelected ? 30 : 20,
           color: isSelected
               ? Theme.of(context).primaryColor
               : const Color(0xFF04246C),

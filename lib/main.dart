@@ -1,5 +1,5 @@
-import 'package:aquaday/utils/routes.dart';
-// import 'package:aquaday/smartwatch/screens/start_screen.dart';
+// import 'package:aquaday/utils/routes.dart';
+import 'package:aquaday/smartwatch/screens/start_screen.dart';
 import 'package:flutter/material.dart';
 // import 'src/screens/start_screen.dart'; 
 
@@ -38,12 +38,12 @@ Widget build(BuildContext context) {
        backgroundColor: Colors.white, 
       ),
     ),
-    // home: const WatchStartScreen(),//probar smartwatch
+    home: const WatchStartScreen(),//probar smartwatch
     // home: const StartScreen(),
 
-// // ***** INICIO DE LA CONFIGURACIÓN DE RUTAS *****
-      initialRoute: AppRoutes.initialRoute, // Establece la ruta inicial de tu aplicación
-      routes: AppRoutes.getApplicationRoutes(), // Utiliza el mapa de rutas definido en app_routes.dart
+// // // ***** INICIO DE LA CONFIGURACIÓN DE RUTAS *****
+      // initialRoute: AppRoutes.initialRoute, // Establece la ruta inicial de tu aplicación
+      // routes: AppRoutes.getApplicationRoutes(), // Utiliza el mapa de rutas definido en app_routes.dart
 
 
   );

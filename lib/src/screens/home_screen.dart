@@ -1,30 +1,28 @@
-// lib/screens/home_screen.dart
 import 'package:aquaday/utils/routes.dart';
 import 'package:aquaday/widgets/custom_input_op2.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaday/widgets/custom_bottom_navbar.dart';
+import 'package:percent_indicator/percent_indicator.dart'; // ✅ Importamos la librería
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme; 
+    final colorScheme = Theme.of(context).colorScheme;
 
-    void onItemTapped(int index) { // Renombramos de onItemTappedPlaceholder a onItemTapped
+    void onItemTapped(int index) {
       print('Ítem de navbar tapped desde HomeScreen: $index');
       switch (index) {
-        case 0: // Home
-          // Ya estamos en la pantalla de Home, no hacemos nada o recargamos si es necesario.
-          // Navigator.pushReplacementNamed(context, AppRoutes.homeRoute); // Puedes comentarlo si no quieres recargar la pantalla
+        case 0:
           break;
-        case 1: // Alarms
+        case 1:
           Navigator.pushReplacementNamed(context, AppRoutes.alarmsRoute);
           break;
-        case 2: // Historial
+        case 2:
           Navigator.pushReplacementNamed(context, AppRoutes.historialRoute);
           break;
-        case 3: // Profile
+        case 3:
           Navigator.pushReplacementNamed(context, AppRoutes.profileRoute);
           break;
       }
@@ -33,7 +31,6 @@ class HomeScreen extends StatelessWidget {
     final List<int> waterAmounts = [250, 500, 750, 1000, 1250, 1500, 1750, 2000];
 
     return Scaffold(
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(40, 100, 40, 0),
         child: Column(
@@ -50,33 +47,28 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 15),
 
             const CustomInput(
-              
-                    label: ' -- ml',
-                    hintText: 'ml',
-                    icon: Icons.edit,
-                    keyboardType: TextInputType.number,
-                  ),
+              label: ' -- ml',
+              hintText: 'ml',
+              icon: Icons.edit,
+              keyboardType: TextInputType.number,
+            ),
 
             const SizedBox(height: 40),
 
-            Container( 
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.blue.shade200, width: 2),
+            // ✅ Reemplazamos el contenedor con la gráfica
+            CircularPercentIndicator(
+              radius: 100.0,
+              lineWidth: 15.0,
+              percent: 0.6, // 60% de progreso (puedes ajustar dinámicamente)
+              center: const Text(
+                "60%",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              alignment: Alignment.center,
-              child: Text(
-                'Espacio para la Gráfica / Progreso',
-                style: TextStyle(
-                  color: Colors.blue.shade700,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
+              progressColor: Colors.blue.shade600,
+              backgroundColor: Colors.blue.shade100,
+              circularStrokeCap: CircularStrokeCap.round,
+              animation: true,
+              animationDuration: 1000,
             ),
 
             const SizedBox(height: 50),
@@ -88,7 +80,6 @@ class HomeScreen extends StatelessWidget {
                 itemCount: waterAmounts.length,
                 itemBuilder: (context, index) {
                   final amount = waterAmounts[index];
-                  // ¡Aquí pasamos colorScheme a la función _buildWaterCard!
                   return _buildWaterCard(context, amount, Icons.local_drink, colorScheme);
                 },
               ),
@@ -99,7 +90,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 print('Botón Drink presionado');
               },
-              icon: const Icon(Icons.add, color: Colors.white, size: 24,),
+              icon: const Icon(Icons.add, color: Colors.white, size: 24),
               label: const Text(
                 'Drink',
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
@@ -122,29 +113,27 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // aqui se agregan las Cards
-Widget _buildWaterCard(BuildContext context, int amount, IconData icon, ColorScheme colorScheme) {
+  Widget _buildWaterCard(BuildContext context, int amount, IconData icon, ColorScheme colorScheme) {
     return GestureDetector(
       onTap: () {
         print('Card de $amount ml seleccionada');
       },
       child: Container(
-        width: 100, // Ancho de cada card
-        margin: const EdgeInsets.symmetric(horizontal: 8), // Espacio entre cards
+        width: 100,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
-
           border: Border.all(
-            color: Colors.blue.shade300, 
-            width: 2, 
+            color: Colors.blue.shade300,
+            width: 2,
           ),
           boxShadow: [
             BoxShadow(
               color: const Color.fromARGB(255, 0, 35, 85).withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: const Offset(0, 3), // Sombra suave
+              offset: const Offset(0, 3),
             ),
           ],
         ),

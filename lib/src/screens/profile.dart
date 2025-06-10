@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 90),
 
               // Avatar y "My Info"
               Container(
@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               CustomInputField(
                 label: 'Enter Name',
-                hintText: 'enter',
+                hintText: 'enter', 
                 icon: Icons.person,
                 // onChanged: (value) {
                 //   // _name = value; // Si quieres guardar el nombre
@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // Campo de selección para Género
               CustomDropdownField(
-                label: '',
+                label: 'Selected Gender',
                 icon: Icons.wc_outlined,
                 items: _genderOptions,
                 selectedValue: _selectedGender,

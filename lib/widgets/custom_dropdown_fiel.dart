@@ -33,13 +33,13 @@ class CustomDropdownField extends StatelessWidget {
         ],
       ),
       child: SizedBox(
-        width: 300, // Mismo ancho que CustomInputField
-        height: 60, // Misma altura que CustomInputField
+        width: 350, // Mismo ancho que CustomInputField
+        height: 65, // Misma altura que CustomInputField
         child: DropdownButtonFormField<String>(
           value: selectedValue,
           decoration: InputDecoration(
             // *** ESTILO DEL INPUT DECORATION - COPIADO DE CustomInputField ***
-            labelText: 'Select gender', // <-- Usa 'label' como labelText aquí
+            labelText: label, // <-- Usa 'label' como labelText aquí
             labelStyle: const TextStyle( // Estilo para el labelText
               fontWeight: FontWeight.w700,
               color: Color(0xFF04246C), // Color para el label cuando está "dentro"

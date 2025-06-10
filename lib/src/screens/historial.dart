@@ -67,12 +67,14 @@ class _HistorialScreenState extends State<HistorialScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 80),
+            const SizedBox(height: 100),
             // Graph Section
             Container(
               padding: const EdgeInsets.all(16.0),
+              width: 400,
+              height: 350,
               decoration: BoxDecoration(
-                color: Colors.blue.shade600, // Matching the app bar color
+                color: const Color(0xFF04246C), // Matching the app bar color
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(40),
                   bottomRight: Radius.circular(40),

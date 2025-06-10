@@ -1,3 +1,5 @@
+import 'package:aquaday/smartwatch/screens/alarms_screen.dart';
+import 'package:aquaday/smartwatch/screens/drink_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math; // Necesario para el CustomPainter del círculo de progreso
 
@@ -42,12 +44,13 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
     // Datos de ejemplo (puedes hacer que estos datos vengan de un estado real de tu app)
     final int percentage = 60; // Valor del porcentaje para el círculo
     final int mlDrank = 1080; // Mililitros consumidos
-    final String time = 'Friday 11:00 a.m.'; // Hora y día
+    final String time = ' 11:00 a.m.'; // Hora y día
+    // final String time = 'Friday'; // Hora y día
 
     return Container(
       color: Colors.black, // Fondo oscuro del reloj
       child: Padding(
-        padding: const EdgeInsets.all(5.0), // Pequeño padding general para el contenedor
+        padding: const EdgeInsets.fromLTRB(18, 0, 15, 20), // Pequeño padding general para el contenedor
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribuye el espacio verticalmente de manera uniforme
           children: [
@@ -55,14 +58,14 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
             Expanded( // Permite que el círculo ocupe el espacio disponible
               child: Center( // Centra el círculo en el espacio disponible
                 child: SizedBox( // Usamos SizedBox para limitar el tamaño del círculo
-                  width: 90, // Tamaño fijo para el círculo (ajusta según necesites)
-                  height: 90, // Debe ser igual al ancho para un círculo perfecto
+                  width: 80, // Tamaño fijo para el círculo (ajusta según necesites)
+                  height: 80, // Debe ser igual al ancho para un círculo perfecto
                   child: CustomPaint(
                     painter: ProgressPainter(
                       percentage: percentage,
-                      backgroundColor: Colors.grey[800]!, // Color del fondo del círculo (gris oscuro)
+                      backgroundColor: const Color.fromARGB(255, 46, 63, 89)!, // Color del fondo del círculo (gris oscuro)
                       progressColor: _primaryColor, // Color del progreso (el azul del tema)
-                      strokeWidth: 6.0, // Ancho de la línea del círculo, más delgado
+                      strokeWidth: 9.0, // Ancho de la línea del círculo, más delgado
                     ),
                     child: Center(
                       child: Text(
@@ -80,11 +83,9 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
               ),
             ),
             
-            const SizedBox(height: 10), // Espacio entre el círculo y los textos de abajo
-
-            // Segundo elemento: Mililitros y hora (en una fila), con padding para los bordes
+             // Segundo elemento
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0), // Padding horizontal para que no se pegue a los bordes
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 5), // Padding horizontal para que no se pegue a los bordes
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distribuye a los extremos
                 children: [
@@ -100,7 +101,8 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
                   Text(
                     time, // Muestra la hora y día
                     style: TextStyle(
-                      color: Colors.grey[400], // Un gris más claro para la hora
+                      
+                      color: Colors.grey[200], // Un gris más claro para la hora
                       fontSize: 9, // Tamaño de fuente más pequeño
                       fontWeight: FontWeight.w600, // Un poco más ancho/negrita
                       decoration: TextDecoration.none,
@@ -112,17 +114,22 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
             
             const SizedBox(height: 10), // Espacio entre los textos y los botones
 
-            // Tercer elemento: Botones "Drink" y "Alarm" (en una fila)
+            // Tercer elemento: Botones 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround, // Distribuye uniformemente
+              
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribuye uniformemente
               children: [
                 // Botón Drink
                 Expanded( // Para que el botón ocupe el espacio disponible
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 3.0), // Espacio entre botones más pequeño
+                    padding: const EdgeInsets.fromLTRB(18, 0, 9, 0), // Espacio entre botones más pequeño
                     child: ElevatedButton(
                       onPressed: () {
                         // Lógica para cambiar los colores de los botones al presionar "Drink"
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const DrinkScreen()),
+                          );
                         setState(() { 
                           _drinkButtonColor = _primaryColor; // Drink se pone azul (color primario)
                           _alarmButtonColor = Colors.grey[700]!; // Alarm se pone gris
@@ -133,10 +140,10 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _drinkButtonColor, // Usa la variable de estado para el color de fondo
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6), // Padding más pequeño
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0), // Padding más pequeño
                         minimumSize: Size.zero, // Asegura que el tamaño del botón se adapte al contenido
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Reduce el área de toque del botón
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), // Bordes menos redondeados para un diseño compacto
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)), // Bordes menos redondeados para un diseño compacto
                         elevation: 3, // Sombra más pequeña
                         animationDuration: const Duration(milliseconds: 300), // Duración de la animación del cambio de color
                         enableFeedback: true, // Habilitar feedback háptico/sonido al presionar
@@ -155,9 +162,13 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
                 // Botón Alarm
                 Expanded( // Para que el botón ocupe el espacio disponible
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 3.0), // Espacio entre botones más pequeño
+                    padding: const EdgeInsets.fromLTRB(9, 0, 18, 0), // Espacio entre botones más pequeño
                     child: ElevatedButton(
                       onPressed: () {
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const AlarmsScreen()),
+                          );
                         // Lógica para cambiar los colores de los botones al presionar "Alarm"
                         setState(() { 
                           _drinkButtonColor = Colors.grey[700]!; // Drink se pone gris
@@ -169,10 +180,10 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _alarmButtonColor, // Usa la variable de estado para el color de fondo
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6), // Padding más pequeño
+                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4), // Padding más pequeño
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                         elevation: 3,
                         animationDuration: const Duration(milliseconds: 300),
                         enableFeedback: true,
@@ -180,7 +191,7 @@ class _WatchHomeScreenState extends State<WatchHomeScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.notifications_active_outlined, size: 10, color: Colors.white), // Ícono de alarma más pequeño
+                          Icon(Icons.notifications_active_sharp, size: 10, color: Colors.white), // Ícono de alarma más pequeño
                           SizedBox(width: 3),
                           Text('Alarm', style: TextStyle(fontSize: 8, color: Colors.white)),
                         ],

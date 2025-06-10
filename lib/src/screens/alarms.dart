@@ -2,7 +2,6 @@ import 'package:aquaday/utils/routes.dart';
 import 'package:aquaday/widgets/custom_bottom_navbar.dart';
 import 'package:aquaday/widgets/custom_dropdown_fiel.dart';
 import 'package:flutter/material.dart';
-import 'package:aquaday/widgets/custom_input_field.dart';
 
 
 class AlarmsScreen extends StatefulWidget {
@@ -31,7 +30,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     'Sunday',
   ];
 
-  // Estados para las cantidades de bebida
+  // Estados para las cantidades de las bebida
   String? _selectedDrinkQuantity;
 
   // Estados para Bedtime Mode
@@ -47,14 +46,14 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Color(0xFF2196F3), // Color de la cabecera y botones
-              onPrimary: Colors.white, // Color del texto en la cabecera
-              surface: Colors.white, // Color del fondo del selector de hora
-              onSurface: Color(0xFF04246C), // Color del texto en el selector
+              primary: Color(0xFF2196F3),
+              onPrimary: Colors.white, 
+              surface: Colors.white, 
+              onSurface: Color(0xFF04246C), 
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFF2196F3), // Color de los botones "OK", "CANCEL"
+                foregroundColor: const Color(0xFF2196F3), // Color de los botones ok y cancel
               ),
             ),
           ),
@@ -63,7 +62,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
       },
     );
     if (picked != null) {
-      setState(() {
+      setState(() { 
         _alarmTimeController.text = picked.format(context);
       });
     }
@@ -160,13 +159,15 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
      
       body: SizedBox(
-        // color: const Color(0xFFF0F6F9), // Fondo del cuerpo
         width: double.infinity,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0), // Padding general
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 70.0), // Padding general
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, // Alineación de los elementos
             children: [
@@ -180,20 +181,49 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              GestureDetector( // Usamos GestureDetector para que el campo sea clicable
-                onTap: () => _selectAlarmTime(context),
-                child: AbsorbPointer( // Impide que el TextField reciba foco y muestre teclado
-                  child: CustomInputField(
-                    label: '', // No labelText visible, ya que el texto está arriba
-                    hintText: 'enter', // Placeholder como en la imagen
-                    icon: Icons.notifications_none, // Icono de campana
-                    // controller: _alarmTimeController, // Asignamos el controlador
-                  ),
-                ),
-              ),
+                        GestureDetector(
+                          onTap: () => _selectBedtimeStartTime(context),
+                          child: AbsorbPointer(
+                            child: Container(
+                              width: screenWidth * 0.84, // Ancho fijo para el campo de hora
+                              height: 50, // Altura fija para el campo de hora
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: const Color(0xFF2196F3), width: 1.5),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.6), // Ajustado para ser más sutil y general
+                                      blurRadius: 9,
+                                      offset: const Offset(0, 2), // Ligeramente más pronunciado que el original
+                                  ),
+                                ],
+                              ),
+                              child: Center( // Centra el texto dentro del campo
+                                child: TextField(
+                                  controller: _bedtimeStartTimeController,
+                                  readOnly: true, // Hace el campo de solo lectura
+                                  textAlign: TextAlign.center, // Centra el texto
+                                  style: const TextStyle(
+                                    color: Color(0xFF04246C),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none, // Elimina el borde interno del TextField
+                                    hintText: '12:00 p. m.',
+                                    hintStyle: TextStyle(color: Color(0xFF04246C)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
               const SizedBox(height: 20),
 
-              // Sección RepeatDays con CustomDropdownField
+              // Sección RepeatDays 
               const Text(
                 'RepeatDays',
                 style: TextStyle(
@@ -230,11 +260,6 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Image.asset(
-                  //   'assets/images/water_drop.png', // Reemplaza con tu imagen del tarro/vaso
-                  //   height: 24, // Ajusta el tamaño de la imagen
-                  //   width: 24,
-                  // ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -243,7 +268,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                 children: [
                   _buildQuantityButton('250 ml'),
                   _buildQuantityButton('500 ml'),
-                  _buildQuantityButton('1000 ml'),
+                  _buildQuantityButton('750 ml'),
                 ],
               ),
               const SizedBox(height: 30),
@@ -463,8 +488,8 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
         });
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? const Color(0xFF2196F3) : Colors.white, // Azul si seleccionado, blanco si no
-        foregroundColor: isSelected ? Colors.white : const Color(0xFF04246C), // Texto blanco si seleccionado, azul si no
+        backgroundColor: isSelected ? const Color(0xFF2196F3) : Colors.white, // Azul si es seleccionado y blanco si no
+        foregroundColor: isSelected ? Colors.white : const Color(0xFF04246C), // Texto blanco si es seleccionado y azul si no
         minimumSize: const Size(90, 40), // Tamaño del botón
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10), // Bordes redondeados
@@ -530,7 +555,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
             child: const Text(
               'edit',
               style: TextStyle(
-                color: Color(0xFF2196F3), // Color azul para "edit"
+                color: Color(0xFF2196F3), // Color azul para editar
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
