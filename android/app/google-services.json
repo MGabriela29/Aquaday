@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "966624119466",
+    "project_id": "aquaday-dc9dd",
+    "storage_bucket": "aquaday-dc9dd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966624119466:android:7d75e5119d2f9c63f1ded3",
+        "android_client_info": {
+          "package_name": "com.example.aquaday"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChnYSGVO0ax_YNNmUjdt1kA5rHmYqBBko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

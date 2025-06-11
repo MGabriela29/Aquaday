@@ -1,4 +1,5 @@
 import 'package:aquaday/src/screens/home_screen.dart';
+import 'package:aquaday/utils/routes.dart';
 import 'package:aquaday/widgets/custom_input_field.dart';
 import 'package:flutter/material.dart';
 
@@ -70,10 +71,7 @@ class SignupScreen extends StatelessWidget {
               const SizedBox(height: 80),
               ElevatedButton(
                 onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const HomeScreen()),
-                          );
+                          Navigator.pushNamed(context, AppRoutes.homeRoute);
                         },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.primary,

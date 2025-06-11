@@ -1,4 +1,5 @@
 import 'package:aquaday/src/screens/signup_screen.dart';
+import 'package:aquaday/utils/routes.dart';
 import 'package:aquaday/widgets/custom_input_field.dart';
 import 'package:flutter/material.dart';
  // importa el nuevo widget
@@ -105,10 +106,8 @@ class LoginScreen extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const SignupScreen()),
-                          );
+                          Navigator.pushNamed(context, AppRoutes.signupRoute);
+
                         },
                         child: const Text(
                           "Sign up",
