@@ -8,7 +8,7 @@ import 'package:aquaday/src/screens/login_screen.dart';
 import 'package:aquaday/src/screens/start_screen.dart'; 
 
 class AppRoutes {
-  static const String initialRoute = '/';
+  // static const String initialRoute = '/';
   static const String signupRoute = '/signup';
   static const String loginRoute = '/login';
   static const String homeRoute = '/home';
@@ -18,7 +18,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> getApplicationRoutes() {
     return <String, WidgetBuilder>{
-      initialRoute: (BuildContext context) => const StartScreen(),
+      // initialRoute: (BuildContext context) => const StartScreen(),
       signupRoute: (BuildContext context) => const SignupScreen(),
       loginRoute: (BuildContext context) => const LoginScreen(),
       homeRoute: (BuildContext context) => const HomeScreen(),

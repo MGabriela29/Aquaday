@@ -3,6 +3,8 @@ import 'package:aquaday/widgets/custom_bottom_navbar.dart';
 import 'package:aquaday/widgets/custom_dropdown_fiel.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaday/widgets/custom_input_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -143,6 +145,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // },
               ),
               const SizedBox(height: 40),
+              // botón de Cerrar Sesión
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 54, 95, 244),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                ),
+                  onPressed: () async {
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Confirmar cierre de sesión'),
+                      content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('Cancelar'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color.fromARGB(255, 54, 95, 244),
+                          ),
+                          child: const Text('Cerrar sesión'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (shouldLogout == true) {
+                    await FirebaseAuth.instance.signOut();
+
+                    if (!mounted) return;
+                    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                  }
+                },
+                icon: const Icon(Icons.logout),
+                label: const Text('Cerrar sesión'),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 // lib/screens/auth_wrapper.dart
 import 'package:aquaday/src/screens/home_screen.dart';
-import 'package:aquaday/src/screens/login_screen.dart';
+// import 'package:aquaday/src/screens/login_screen.dart';
+import 'package:aquaday/src/screens/start_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class AuthWrapper extends StatelessWidget {
         } else if (snapshot.hasData) {
           return const HomeScreen(); // Usuario logueado
         } else {
-          return const LoginScreen(); // Usuario no logueado
+          return const StartScreen(); // Usuario no logueado
         }
       },
     );
