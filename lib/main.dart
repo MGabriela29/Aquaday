@@ -1,3 +1,4 @@
+import 'package:aquaday/src/screens/auth_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,7 @@ import 'package:aquaday/utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Inicializa Firebase
+  await Firebase.initializeApp(); // para inicializar Firebase
   runApp(const MyApp());
 }
 
@@ -44,9 +45,10 @@ Widget build(BuildContext context) {
     ),
     // home: const WatchStartScreen(),//probar smartwatch
     // home: const StartScreen(),
+    home: const AuthWrapper(),
 
 // // // ***** INICIO DE LA CONFIGURACIÓN DE RUTAS *****
-      initialRoute: AppRoutes.initialRoute, // Establece la ruta inicial de tu aplicación
+      // initialRoute: AppRoutes.initialRoute, // Establece la ruta inicial de tu aplicación
       routes: AppRoutes.getApplicationRoutes(), // Utiliza el mapa de rutas definido en app_routes.dart
 
 

@@ -83,6 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 30),
 
               CustomInputField(
+                controller: TextEditingController(),
                 label: 'Enter Name',
                 hintText: 'enter', 
                 icon: Icons.person,
@@ -93,6 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
 
               CustomInputField(
+                controller: TextEditingController(),
                 label: 'Enter Age',
                 hintText: 'enter',
                 icon: Icons.cake,
@@ -119,6 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
 
               CustomInputField(
+                controller: TextEditingController(),
                 label: 'Enter Height (cm)',
                 hintText: 'enter',
                 icon: Icons.straighten_rounded,
@@ -130,6 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
 
               CustomInputField(
+                controller: TextEditingController(),
                 label: 'Enter Weight (kg)',
                 hintText: 'enter',
                 icon: Icons.monitor_weight_rounded,
