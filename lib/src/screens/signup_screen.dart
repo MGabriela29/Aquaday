@@ -95,7 +95,7 @@ void _showError(String message) {
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(30, 50, 30, 20),
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
         child: Center(
           child: Column(
             children: [

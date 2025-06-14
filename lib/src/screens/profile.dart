@@ -1,10 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aquaday/utils/routes.dart';
 import 'package:aquaday/widgets/custom_bottom_navbar.dart';
-import 'package:aquaday/widgets/custom_dropdown_fiel.dart';
-import 'package:flutter/material.dart';
-import 'package:aquaday/widgets/custom_input_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,26 +12,38 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Variables de estado para los valores de los campos
-  String? _selectedGender; // Variable para almacenar el género seleccionado
+  Map<String, dynamic>? userData;
 
-  // Lista de opciones para el género
-  final List<String> _genderOptions = ['Male', 'Female', 'Other', 'Prefer not to say'];
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+        setState(() {
+          userData = doc.data();
+        });
+      }
+    }
+  }
 
   void onItemTapped(int index) {
-    print('Ítem de navbar tapped desde ProfileScreen: $index');
     switch (index) {
-      case 0: // Home
+      case 0:
         Navigator.pushReplacementNamed(context, AppRoutes.homeRoute);
         break;
-      case 1: // Alarms
+      case 1:
         Navigator.pushReplacementNamed(context, AppRoutes.alarmsRoute);
         break;
-      case 2: // Historial
+      case 2:
         Navigator.pushReplacementNamed(context, AppRoutes.historialRoute);
         break;
-      case 3: // Profile
-        // Ya estamos en la pantalla de perfil, no hacemos nada o refrescamos si es necesario.
+      case 3:
         break;
     }
   }
@@ -41,160 +51,214 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 90),
+      backgroundColor: const Color(0xFFF4F6FA),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 60),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Avatar
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 9,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const CircleAvatar(
+                radius: 60,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.water_drop, size: 60, color:  Colors.lightBlue),
+              ),
+            ),
+            const SizedBox(height: 20),
 
-              // Avatar y "My Info"
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: const CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  // child: Image(
-                  //   image: AssetImage('assets/images/profile.png'),
-                  //   fit: BoxFit.contain,
-                  // ),
-                  child: Icon(Icons.water_drop, size: 60, color: Color(0xFF4C7B9E)),
-                ),
+            // Nombre
+            Text(
+              userData?['username'] ?? 'Cargando...',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color:  Color(0xFF04246C),
               ),
-              const SizedBox(height: 10),
-              const Text(
-                'My Info',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF04246C), // Usar el color del título grande
-                ),
-              ),
-              const SizedBox(height: 30),
+            ),
+            const SizedBox(height: 20),
 
-              CustomInputField(
-                controller: TextEditingController(),
-                label: 'Enter Name',
-                hintText: 'enter', 
-                icon: Icons.person,
-                // onChanged: (value) {
-                //   // _name = value; // Si quieres guardar el nombre
-                // },
-              ),
-              const SizedBox(height: 20),
-
-              CustomInputField(
-                controller: TextEditingController(),
-                label: 'Enter Age',
-                hintText: 'enter',
-                icon: Icons.cake,
-                keyboardType: TextInputType.number,
-                // onChanged: (value) {
-                //   // _age = int.tryParse(value); // Si quieres guardar la edad
-                // },
-              ),
-              const SizedBox(height: 20),
-
-              // Campo de selección para Género
-              CustomDropdownField(
-                label: 'Selected Gender',
-                icon: Icons.wc_outlined,
-                items: _genderOptions,
-                selectedValue: _selectedGender,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedGender = newValue;
-                  });
-                  print('Selected Gender: $_selectedGender');
-                },
-              ),
-              const SizedBox(height: 20),
-
-              CustomInputField(
-                controller: TextEditingController(),
-                label: 'Enter Height (cm)',
-                hintText: 'enter',
-                icon: Icons.straighten_rounded,
-                keyboardType: TextInputType.number,
-                // onChanged: (value) {
-                //   // _height = double.tryParse(value); // Si quieres guardar la altura
-                // },
-              ),
-              const SizedBox(height: 20),
-
-              CustomInputField(
-                controller: TextEditingController(),
-                label: 'Enter Weight (kg)',
-                hintText: 'enter',
-                icon: Icons.monitor_weight_rounded,
-                keyboardType: TextInputType.number,
-                // onChanged: (value) {
-                //   // _weight = double.tryParse(value); // Si quieres guardar el peso
-                // },
-              ),
-              const SizedBox(height: 40),
-              // botón de Cerrar Sesión
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 54, 95, 244),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                  onPressed: () async {
-                  final shouldLogout = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Confirmar cierre de sesión'),
-                      content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancelar'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: const Color.fromARGB(255, 54, 95, 244),
+            userData == null
+                ? const CircularProgressIndicator()
+                : Card(
+                    elevation: 9,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(18, 30, 12, 30),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'My Profile',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              // fontFamily: 'Bodoni',
+                              color: Color(0xFF04246C),
+                            ),
                           ),
-                          child: const Text('Cerrar sesión'),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          const Divider(),
+                          InfoRow(icon: Icons.email, label: 'Email', value: userData!['email']),
+                              Divider(
+                                    color: Colors.grey, 
+                                    height: 15, 
+                                    thickness: 1, 
+                                    indent: 28, 
+                                    endIndent: 20, 
+                                  ),
+                          InfoRow(icon: Icons.phone, label: 'Phone', value: userData!['phone']),
+                              Divider(
+                                    color: Colors.grey, 
+                                    height: 15, 
+                                    thickness: 1, 
+                                    indent: 28, 
+                                    endIndent: 20, 
+                                  ),                          
+                          InfoRow(icon: Icons.wc, label: 'Gender', value: userData!['gender'] ?? 'Not specified'),
+                              Divider(
+                                    color: Colors.grey, 
+                                    height: 15, 
+                                    thickness: 1, 
+                                    indent: 28, 
+                                    endIndent: 20, 
+                                  ),
+                          InfoRow(icon: Icons.date_range, label: 'Age', value: userData!['age'] ?? 'Not specified'),
+                              Divider(
+                                    color: Colors.grey, 
+                                    height: 15, 
+                                    thickness: 1, 
+                                    indent: 28, 
+                                    endIndent: 20, 
+                                  ),
+                          InfoRow(icon: Icons.height, label: 'Height (cm)', value: userData!['height'] ?? 'Not specified'),
+                              Divider(
+                                    color: Colors.grey, 
+                                    height: 15, 
+                                    thickness: 1, 
+                                    indent: 28, 
+                                    endIndent: 20, 
+                                  ),
+                          InfoRow(icon: Icons.monitor_weight, label: 'Weight (kg)', value: userData!['weight'] ?? 'Not specified'),
+                        ],
+                      ),
                     ),
-                  );
+                  ),
+            const SizedBox(height: 30),
 
-                  if (shouldLogout == true) {
-                    await FirebaseAuth.instance.signOut();
+            // Botones horizontales: Edit  y Logout
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.editProfileRoute);
+                  },
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Edit Profile'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:  Colors.lightBlue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    final shouldLogout = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Logout'),
+                        content: const Text('if you want to logout, please confirm.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:  Color(0xFF04246C),
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Confirm'),
+                          ),
+                        ],
+                      ),
+                    );
 
-                    if (!mounted) return;
-                    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-                  }
-                },
-                icon: const Icon(Icons.logout),
-                label: const Text('Cerrar sesión'),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+                    if (shouldLogout == true) {
+                      await FirebaseAuth.instance.signOut();
+                      if (!mounted) return;
+                      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                    }
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Logout'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF04246C),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: CustomBottomNavbar(
         selectedIndex: 3,
         onItemTapped: onItemTapped,
       ),
+    );
+  }
+}
+
+class InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const InfoRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: const Color(0xFF04246C), size: 26),
+        const SizedBox(width: 2),
+        Expanded(
+          child: Text(
+            '$label:',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          flex: 3,
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 15),
+          ),
+        ),
+      ],
     );
   }
 }

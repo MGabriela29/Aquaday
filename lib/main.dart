@@ -26,7 +26,7 @@ Widget build(BuildContext context) {
       colorScheme: ColorScheme.fromSwatch().copyWith(
         primary: const Color(0xFF00B4D8),
         secondary: const Color.fromARGB(255, 167, 198, 209),
-        error: Colors.red,
+
       ),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: Colors.black87),

@@ -30,8 +30,8 @@ class CustomBottomNavbar extends StatelessWidget {
 
       items: [
         _buildBarItem(Icons.home, 'Home', 0, context),
-        _buildBarItem(Icons.alarm, 'Alarms', 1, context),
-        _buildBarItem(Icons.history, 'Historial', 2, context),
+        _buildBarItem(Icons.alarm_outlined, 'Alarms', 1, context),
+        _buildBarItem(Icons.data_thresholding_outlined, 'Historial', 2, context),
         _buildBarItem(Icons.person, 'Profile', 3, context),
       ],
     );

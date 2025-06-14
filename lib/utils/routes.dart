@@ -1,3 +1,4 @@
+import 'package:aquaday/src/screens/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaday/src/screens/home_screen.dart';
 import 'package:aquaday/src/screens/profile.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String profileRoute = '/profile';
   static const String alarmsRoute = '/alarms';
   static const String historialRoute = '/historial';
+  static const String editProfileRoute = '/EditProfile';
 
   static Map<String, WidgetBuilder> getApplicationRoutes() {
     return <String, WidgetBuilder>{
@@ -25,6 +27,7 @@ class AppRoutes {
       profileRoute: (BuildContext context) => const ProfileScreen(),
       alarmsRoute: (BuildContext context) => const AlarmsScreen(),
       historialRoute: (BuildContext context) => const HistorialScreen(),
+      editProfileRoute: (BuildContext context) => const EditProfile (),
     };
   }
 }
