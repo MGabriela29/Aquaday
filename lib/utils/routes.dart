@@ -6,7 +6,7 @@ import 'package:aquaday/src/screens/alarms.dart';
 import 'package:aquaday/src/screens/historial.dart';
 import 'package:aquaday/src/screens/signup_screen.dart';
 import 'package:aquaday/src/screens/login_screen.dart';
-import 'package:aquaday/src/screens/start_screen.dart'; 
+// import 'package:aquaday/src/screens/start_screen.dart'; 
 
 class AppRoutes {
   // static const String initialRoute = '/';

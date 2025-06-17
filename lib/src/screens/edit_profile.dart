@@ -73,7 +73,8 @@ class _EditProfileState extends State<EditProfile> {
 
       // Mostrar mensaje y redirigir
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Datos actualizados exitosamente')),
+        const SnackBar(content: Text('Profile updated successfully!'),
+        backgroundColor: Color.fromARGB(255, 18, 0, 108),),
       );
 
       // Redirigir a perfil
@@ -101,22 +102,25 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-backgroundColor: const Color(0xFFF4F6FA),
+        backgroundColor: const Color(0xFFF4F6FA),
       ),
       backgroundColor: const Color(0xFFF4F6FA),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
         child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40),
+                       side: const BorderSide(
+                        color: Colors.lightBlue, width: 2),
+                        ),
           elevation: 25,
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical:15),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical:40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -124,12 +128,12 @@ backgroundColor: const Color(0xFFF4F6FA),
                 const Text(
                   'Edit Profile',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                     color: Color(0xFF04246C),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
 
                 CustomInputField(
                   controller: _usernameController,
@@ -137,7 +141,7 @@ backgroundColor: const Color(0xFFF4F6FA),
                   hintText: 'Enter your username',
                   icon: Icons.person,
                 ),
-
+                const SizedBox(height: 10),
                 CustomInputField(
                   controller: _phoneController,
                   label: 'Phone Number',
@@ -145,6 +149,7 @@ backgroundColor: const Color(0xFFF4F6FA),
                   icon: Icons.phone,
                   keyboardType: TextInputType.phone,
                 ),
+                const SizedBox(height: 10),
                 CustomInputField(
                   controller: _ageController,
                   label: 'Age',
@@ -152,7 +157,7 @@ backgroundColor: const Color(0xFFF4F6FA),
                   icon: Icons.date_range,
                   keyboardType: TextInputType.number,
                 ),
-
+                const SizedBox(height: 10),
                 CustomDropdownField(
                   label: 'Gender',
                   icon: Icons.wc_outlined,
@@ -164,7 +169,7 @@ backgroundColor: const Color(0xFFF4F6FA),
                     });
                   },
                 ),
-
+                const SizedBox(height: 10), 
                 CustomInputField(
                   controller: _heightController,
                   label: 'Height (cm)',
@@ -172,7 +177,7 @@ backgroundColor: const Color(0xFFF4F6FA),
                   icon: Icons.height,
                   keyboardType: TextInputType.number,
                 ),
-
+                const SizedBox(height: 10), 
                 CustomInputField(
                   controller: _weightController,
                   label: 'Weight (kg)',
@@ -180,7 +185,7 @@ backgroundColor: const Color(0xFFF4F6FA),
                   icon: Icons.monitor_weight,
                   keyboardType: TextInputType.number,
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 8),
 
                 ElevatedButton.icon(
                   onPressed: updateUserData,
