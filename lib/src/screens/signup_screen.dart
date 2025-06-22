@@ -1,3 +1,4 @@
+import 'package:aquaday/src/screens/termAndConditions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -153,7 +154,9 @@ void _showError(String message) {
               const SizedBox(height: 24),
               const Text('By registering you agree to'),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _showTermsAndConditions(context);
+                },
                 child: const Text('Terms of services and Privacy Policy'),
               ),
             ],
@@ -162,4 +165,53 @@ void _showError(String message) {
       ),
     );
   }
+    // Función para mostrar el diálogo flotante
+  void _showTermsAndConditions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Bordes redondeados para la tarjeta
+          ),
+          titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0), // Ajustar padding del título
+          contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 0), // Ajustar padding del contenido
+          actionsPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10), // Ajustar padding de las acciones
+
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // No es necesario un título aquí si ya está en el contenido
+              // Pero puedes añadir uno si lo deseas
+              const Text(''), // Título vacío o personalizado si lo deseas
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.grey),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el diálogo
+                },
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite, // Para que el diálogo ocupe el ancho disponible
+            height: MediaQuery.of(context).size.height * 0.6, // Ocupa un 60% de la altura de la pantalla
+            child: const TermsAndConditionsContent(), // Aquí se inserta el contenido de los términos
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cerrar',
+                style: TextStyle(color: Color(0xFF04246C), fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
+

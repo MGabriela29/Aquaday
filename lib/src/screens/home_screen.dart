@@ -243,19 +243,25 @@ Future<void> fetchWaterData() async {
                      ),
                     onSubmitted: (_) {
                       final newGoal = int.tryParse(dailyGoalController.text);
-                      if (newGoal != null && newGoal > 0) {
+                      if (newGoal != null && newGoal > 0 && newGoal <= 3000) {
                         updateDailyGoal(newGoal);
                         FocusScope.of(context).unfocus();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Goal updated successfully'),
-                          backgroundColor: Color.fromARGB(255, 18, 0, 108),),
-                          
+                          const SnackBar(
+                            content: Text('Goal updated successfully'),
+                            backgroundColor: Color.fromARGB(255, 18, 0, 108),
+                          ),
                         );
                       } else {
                         dailyGoalController.text = dailyGoal.toString();
+                        String errorMsg = (newGoal != null && newGoal > 3000)
+                            ? 'The maximum daily goal is 3000 ml.'
+                            : 'Please enter a valid number';
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please enter a valid number'),
-                          backgroundColor: Color.fromARGB(255, 18, 0, 108),),
+                          SnackBar(
+                            content: Text(errorMsg),
+                            backgroundColor: const Color.fromARGB(255, 201, 14, 14),
+                          ),
                         );
                       }
                     },
@@ -265,23 +271,30 @@ Future<void> fetchWaterData() async {
                 IconButton(
                   icon: const Icon(Icons.check, color: Color(0xFF04246C)),
                   tooltip: 'Save Daily Goal',
-                  onPressed: () {
-                    final newGoal = int.tryParse(dailyGoalController.text);
-                    if (newGoal != null && newGoal > 0) {
-                      updateDailyGoal(newGoal);
-                      FocusScope.of(context).unfocus();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Goal updated successfully'),
-                        backgroundColor: Color.fromARGB(255, 18, 0, 108),),
-                      );
-                    } else {
-                      dailyGoalController.text = dailyGoal.toString();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please enter a valid number'),
-                        backgroundColor: Color.fromARGB(255, 18, 0, 108),),
-                      );
-                    }
-                  },
+                onPressed: () {
+                  final newGoal = int.tryParse(dailyGoalController.text);
+                  if (newGoal != null && newGoal > 0 && newGoal <= 3000) {
+                    updateDailyGoal(newGoal);
+                    FocusScope.of(context).unfocus();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Goal updated successfully'),
+                        backgroundColor: Color.fromARGB(255, 18, 0, 108),
+                      ),
+                    );
+                  } else {
+                    dailyGoalController.text = dailyGoal.toString();
+                    String errorMsg = (newGoal != null && newGoal > 3000)
+                        ? 'The maximum daily goal is 3000 ml.'
+                        : 'Please enter a valid number';
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(errorMsg),
+                        backgroundColor: const Color.fromARGB(255, 201, 14, 14),
+                      ),
+                    );
+                  }
+                }
                 ),
               ],
             ),
