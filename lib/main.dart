@@ -1,3 +1,4 @@
+import 'package:aquaday/services/noti_service.dart';// mio
 import 'package:aquaday/services/notification_service.dart';
 import 'package:aquaday/src/screens/auth_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:aquaday/utils/routes.dart';
 // import 'package:aquaday/smartwatch/screens/start_screen.dart';
 // import 'src/screens/start_screen.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // para inicializar Firebase
@@ -17,7 +19,12 @@ void main() async {
   tz.initializeTimeZones();
   tz.setLocalLocation(tz.getLocation('America/Mexico_City'));
 
-  await NotificationService().init(); // esta clase la crearemos
+  await NotificationService().init();//de las alarms 
+  await requestNotificationPermission();
+  await NotiService().initNoti(); // Inicializar el servicio de notificaciones
+ 
+ 
+ // esta clase la crearemos
 
   runApp(const MyApp());
 }
