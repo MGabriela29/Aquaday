@@ -24,12 +24,11 @@ const InitializationSettings initializationSettings =
 Future<void>mostrarNoti()async{
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'alarm_channel_id_v2', // id del canal
-      'Alarm Notifications v2', // nombre visible
-      // channelDescription: 'Canal para alarmas programadas de AquaDay',
+      'alarm_channel_id_v2', 
+      'Alarm Notifications v2', 
       importance: Importance.max,
       priority: Priority.high,
-      // playSound: true,
+
     );
 
     const NotificationDetails notificationDetails =
@@ -37,8 +36,7 @@ Future<void>mostrarNoti()async{
 
     await flutterLocalNotificationsPlugin.show(
       0,
-       'AquaDay - ¡Hora de beber agua!',
-       'Es hora de hidratarte y cuidar tu salud. \n Bebe un vaso de agua ahora.',
-      // 'mi noti de prueba', 
+       'AquaDay - Time to drink water!',
+       'It is time to hydrate and take care of your health. \n Drink a glass of water now..',
       notificationDetails );
 }

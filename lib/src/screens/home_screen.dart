@@ -85,12 +85,14 @@ Future<void> fetchWaterData() async {
         // Reinicia el contador si es un nuevo día
         await userRef.update({
           'currentIntake': 0,
+          'dailyGoal': 2000,
           'lastUpdated': currentDate.toIso8601String(),
         });
 
         setState(() {
           currentIntake = 0;
-          dailyGoal = data['dailyGoal'] ?? 2000;
+          // dailyGoal = data['dailyGoal'] ?? 2000;
+          dailyGoal = 2000;
           dailyGoalController.text = dailyGoal.toString();
         });
       } else {
@@ -99,6 +101,7 @@ Future<void> fetchWaterData() async {
           dailyGoal = data['dailyGoal'] ?? 2000;
           currentIntake = data['currentIntake'] ?? 0;
           dailyGoalController.text = dailyGoal.toString();
+          generateWaterAmounts();
         });
       }
     }
@@ -388,7 +391,7 @@ Future<void> fetchWaterData() async {
               ),
             ),
 
-            // Espacio entre la lista de cantidades y el botón
+
             const SizedBox(height: 40),
 
             ElevatedButton.icon(

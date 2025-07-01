@@ -23,8 +23,6 @@ void main() async {
   await requestNotificationPermission();
   await NotiService().initNoti(); // Inicializar el servicio de notificaciones
  
- 
- // esta clase la crearemos
 
   runApp(const MyApp());
 }

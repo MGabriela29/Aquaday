@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 120, 24, 0),
+        padding: const EdgeInsets.fromLTRB(24, 80, 24, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -63,9 +63,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     elevation: 30,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
-                       side: const BorderSide(
-                        color: Colors.lightBlue, width: 2),
-                        ),
+                      side: const BorderSide(color: Colors.lightBlue, width: 2),
+                    ),
                     color: Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(18, 30, 12, 30),
@@ -81,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 20),
 
-                          // Avatar dentro de la Card
+                          // Avatar
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -102,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Username dentro de la Card
+                          // Username
                           Text(
                             userData?['username'] ?? 'Cargando...',
                             style: const TextStyle(
@@ -111,7 +110,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Color(0xFF04246C),
                             ),
                           ),
-                          const SizedBox(height: 20),
+
+                          // Conexión smartwatch
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Column(
+                              children: [
+                                // Icon(Icons.watch_outlined, color: Colors.lightBlue, size: 40),
+                                const SizedBox(height: 2),
+                                const Text(
+                                  'Smartwatch not connected',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: Color(0xFF04246C),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                const SizedBox(height: 12),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Initiating connection...'),
+                                      backgroundColor: Color.fromARGB(255, 18, 0, 108),
+                                    ),
+                                    );
+                                    //  la lógica de conexión del smartwatch
+                                  },
+                                  icon: const Icon(Icons.bluetooth),
+                                  label: const Text('Conectar reloj'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.lightBlue,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
                           const Divider(),
                           InfoRow(icon: Icons.email, label: 'Email', value: userData!['email']),
@@ -155,9 +193,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             endIndent: 20,
                           ),
                           InfoRow(icon: Icons.monitor_weight, label: 'Weight (kg)', value: userData!['weight'] ?? 'Not specified'),
-                          const SizedBox(height: 50),
+                          const SizedBox(height: 30),
 
-                          // Botones dentro de la card
+                          // Botones
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

@@ -44,7 +44,6 @@ class NotificationService {
       },
     );
 
-  // 🔽 REGISTRA CANAL PERSONALIZADO AQUÍ 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'alarm_channel_id', // id del canal
     'Alarm Notifications v3', // nombre visible
