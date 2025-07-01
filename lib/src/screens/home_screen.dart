@@ -118,10 +118,23 @@ Future<void> fetchWaterData() async {
 
   final newTotal = currentIntake + amount;
 
+    final dateKey = DateTime.now().toIso8601String().substring(0, 10);
+
   await userRef.update({
     'currentIntake': newTotal,
     'lastUpdated': DateTime.now().toIso8601String(),
-      'historial/${DateTime.now().toIso8601String().substring(0, 10)}': newTotal,
+      // 'historial/${DateTime.now().toIso8601String().substring(0, 10)}': newTotal,
+      'dailyGoal': dailyGoal,
+  });
+
+  final historialRef = FirebaseDatabase.instance.ref('users/$uid/historial/$dateKey');
+  await historialRef.set({
+    'intake': newTotal,
+    'goal': dailyGoal,
+  });
+
+  setState(() {
+    currentIntake = newTotal;
   });
 
   if (newTotal == dailyGoal) {
@@ -155,7 +168,7 @@ Future<void> fetchWaterData() async {
 }
 
 
-  void updateDailyGoal(int newGoal) async {
+  Future <void> updateDailyGoal(int newGoal) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -165,6 +178,22 @@ Future<void> fetchWaterData() async {
     await userRef.update({
       'dailyGoal': newGoal,
     });
+
+      // así el historial tendrá siempre la meta correcta.
+  final dateKey = DateTime.now().toIso8601String().substring(0, 10);
+  final historialRef = FirebaseDatabase.instance.ref('users/$uid/historial/$dateKey');
+  final snapshot = await historialRef.get();
+
+  int intake = 0;
+  if (snapshot.exists) {
+    final data = snapshot.value as Map;
+    intake = (data['intake'] as num?)?.toInt() ?? 0;
+  }
+
+  await historialRef.set({
+    'intake': intake,
+    'goal': newGoal,
+  });
 
     setState(() {
       dailyGoal = newGoal;

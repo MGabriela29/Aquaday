@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
 
 class WaterIntakeEntry {
   final int volumeMl;
+  final double goal;
   final DateTime timestamp;
 
-  WaterIntakeEntry({required this.volumeMl, required this.timestamp});
+  WaterIntakeEntry({
+    required this.volumeMl,
+    required this.goal,
+    required this.timestamp,
+  });
 }
 
 class HistorialScreen extends StatefulWidget {
@@ -22,9 +26,11 @@ class HistorialScreen extends StatefulWidget {
 
 class _HistorialScreenState extends State<HistorialScreen> {
   List<WaterIntakeEntry> waterEntries = [];
-  final double dailyGoal = 2000;
   Map<String, double> dailyProgress = {
     'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0,
+  };
+  Map<String, double> dailyGoals = {
+    'Mon': 2000, 'Tue': 2000, 'Wed': 2000, 'Thu': 2000, 'Fri': 2000, 'Sat': 2000, 'Sun': 2000,
   };
 
   @override
@@ -47,12 +53,16 @@ class _HistorialScreenState extends State<HistorialScreen> {
       'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0,
     };
 
+    Map<String, double> goalMap = {
+      'Mon': 2000, 'Tue': 2000, 'Wed': 2000, 'Thu': 2000, 'Fri': 2000, 'Sat': 2000, 'Sun': 2000,
+    };
+
     List<WaterIntakeEntry> entries = [];
 
     if (snapshot.exists) {
       final data = snapshot.value as Map<dynamic, dynamic>;
 
-      data.forEach((dateStr, volume) {
+      data.forEach((dateStr, info) {
         final dateParts = dateStr.split('-');
         if (dateParts.length == 3) {
           final date = DateTime(
@@ -61,27 +71,42 @@ class _HistorialScreenState extends State<HistorialScreen> {
             int.parse(dateParts[2]),
           );
 
+          double parsedVolume = 0;
+          double goal = 2000;
+
+          if (info is Map<dynamic, dynamic>) {
+            parsedVolume = (info['intake'] as num?)?.toDouble() ?? 0;
+            goal = (info['goal'] as num?)?.toDouble() ?? 2000;
+          } else if (info is num) {
+            parsedVolume = info.toDouble();
+          }
+
+          // Agregamos SIEMPRE la entrada al historial
+          entries.add(WaterIntakeEntry(
+            volumeMl: parsedVolume.toInt(),
+            goal: goal,
+            timestamp: date,
+          ));
+
+          // Solo si la fecha está dentro de los últimos 7 días, lo agregamos al gráfico
           if (date.isAfter(sevenDaysAgo.subtract(const Duration(days: 1))) &&
               date.isBefore(now.add(const Duration(days: 1)))) {
             final weekday = _getWeekdayLabel(date.weekday);
-            final double parsedVolume = (volume is int || volume is double)
-                ? (volume as num).toDouble()
-                : 0;
 
             progressMap[weekday] = (progressMap[weekday] ?? 0) + parsedVolume;
-
-            entries.add(WaterIntakeEntry(
-              volumeMl: parsedVolume.toInt(),
-              timestamp: date,
-            ));
+            goalMap[weekday] = goal;
           }
         }
       });
     }
+    
+    
+    entries.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     setState(() {
       waterEntries = entries;
       dailyProgress = progressMap;
+      dailyGoals = goalMap;
     });
   }
 
@@ -140,8 +165,7 @@ class _HistorialScreenState extends State<HistorialScreen> {
               child: AspectRatio(
                 aspectRatio: 1.20,
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: 16.0, left: 16.0, top: 30, bottom: 2),
+                  padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 30, bottom: 2),
                   child: LineChart(mainData()),
                 ),
               ),
@@ -154,8 +178,7 @@ class _HistorialScreenState extends State<HistorialScreen> {
               itemBuilder: (context, index) {
                 final entry = waterEntries[index];
                 return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Card(
                     elevation: 3,
                     shape: RoundedRectangleBorder(
@@ -183,7 +206,7 @@ class _HistorialScreenState extends State<HistorialScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${entry.volumeMl} ml',
+                                  '${entry.volumeMl} ml / ${entry.goal.toInt()} ml',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -192,7 +215,7 @@ class _HistorialScreenState extends State<HistorialScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '${_formatDate(entry.timestamp)}, ${_formatTime(entry.timestamp)}',
+                                  '${_formatDate(entry.timestamp)}',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey.shade600,
@@ -201,11 +224,6 @@ class _HistorialScreenState extends State<HistorialScreen> {
                               ],
                             ),
                           ),
-                          // IconButton(
-                          //   color: const Color.fromARGB(255, 201, 14, 14),
-                          //   icon: const Icon(Icons.more_vert),
-                          //   onPressed: () {},
-                          // ),
                         ],
                       ),
                     ),
@@ -227,15 +245,26 @@ class _HistorialScreenState extends State<HistorialScreen> {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
   }
 
-  String _formatTime(DateTime dateTime) {
-    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  // Ya no necesitas _formatTime porque no se muestra
 
   LineChartData mainData() {
     final List<String> weekOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final now = DateTime.now();
+    double maxYValue = 0;
 
-    final double maxEntry = dailyProgress.values.fold(dailyGoal, (prev, curr) => curr > prev ? curr : prev);
-    final double maxYValue = maxEntry > dailyGoal ? maxEntry * 1.1 : dailyGoal;
+    for (int i = 0; i < weekOrder.length; i++) {
+      final date = now.subtract(Duration(days: 6 - i));
+      final dateKey = '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      final value = dailyProgress[weekOrder[i]] ?? 0;
+      final goal = waterEntries.firstWhere(
+        (e) => e.timestamp.toIso8601String().substring(0, 10) == dateKey,
+        orElse: () => WaterIntakeEntry(volumeMl: 0, goal: 2000, timestamp: date),
+      ).goal;
+
+      maxYValue = [maxYValue, value, goal].reduce((a, b) => a > b ? a : b);
+    }
+
+    maxYValue *= 1.1;
 
     return LineChartData(
       gridData: FlGridData(show: true, drawVerticalLine: true, horizontalInterval: 250, verticalInterval: 1),
@@ -264,9 +293,9 @@ class _HistorialScreenState extends State<HistorialScreen> {
       lineBarsData: [
         LineChartBarData(
           spots: weekOrder.asMap().entries.map((entry) {
-            int index = entry.key;
-            String day = entry.value;
-            double value = dailyProgress[day] ?? 0;
+            final index = entry.key;
+            final day = entry.value;
+            final value = dailyProgress[day] ?? 0;
             return FlSpot(index.toDouble(), value);
           }).toList(),
           isCurved: true,
@@ -284,8 +313,12 @@ class _HistorialScreenState extends State<HistorialScreen> {
           ),
         ),
         LineChartBarData(
-          spots: [for (int i = 0; i <= 6; i++) FlSpot(i.toDouble(), dailyGoal)],
-          isCurved: true,
+          spots: List.generate(7, (i) {
+            final day = weekOrder[i];
+            final goal = dailyGoals[day] ?? 2000;
+            return FlSpot(i.toDouble(), goal);
+          }),
+          isCurved: false,
           color: Colors.white.withOpacity(0.7),
           barWidth: 2,
           dotData: const FlDotData(show: false),
@@ -295,25 +328,40 @@ class _HistorialScreenState extends State<HistorialScreen> {
       lineTouchData: LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
-          tooltipRoundedRadius: 10,
-          tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          tooltipMargin: 8,
+          tooltipRoundedRadius: 12,
+          tooltipPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          tooltipMargin: 12,
           fitInsideHorizontally: true,
           fitInsideVertically: true,
-          getTooltipItems: (touchedBarSpots) {
-            return touchedBarSpots.map((barSpot) {
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots.map((barSpot) {
+              final x = barSpot.x.toInt();
+              final day = (x >= 0 && x < weekOrder.length) ? weekOrder[x] : 'Day';
+              final y = barSpot.y;
+              final goal = dailyGoals[day] ?? 2000;
+              final met = y >= goal;
+
+              final isGoalLine = barSpot.barIndex == 1;
+              if (isGoalLine) return null;
+
               return LineTooltipItem(
-                '${weekOrder[barSpot.x.toInt()]}\n',
+                '$day\n',
                 const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.lightBlueAccent,
-                  fontSize: 13,
+                  fontSize: 14,
                 ),
                 children: [
                   TextSpan(
-                    text: '${barSpot.y.toInt()} ml',
+                    text: 'Daily Goal: ${goal.toInt()} ml \n',
+                    style: TextStyle(
+                      color: met ? const Color.fromARGB(255, 105, 233, 240) : Colors.lightBlue.shade50,
+                      fontSize: 13,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Progress: ${y.toInt()} ml',
                     style: const TextStyle(
-                      fontWeight: FontWeight.normal,
                       color: Colors.white,
                       fontSize: 12,
                     ),
